@@ -1,0 +1,471 @@
+<!DOCTYPE html>  <html lang="zh-CN">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">  
+    <title>小明同学</title>  
+    <style>  
+        * {  
+            margin: 0;  
+            padding: 0;  
+            box-sizing: border-box;  }  
+
+    body {  
+    overflow-y: auto; /* 允许垂直滚动 */  
+    font-family: Arial, sans-serif;  
+    background: #FFFFFF;  
+    min-height: 100vh; /* 确保内容不足时也能撑满屏幕 */  
+    }  
+
+    /* 主页样式 */  
+    .profile {  
+        position: relative;  
+        color: black;  
+        padding: 15px;  
+        touch-action: pan-y; /* 允许垂直滑动 */  
+    }  
+
+    .avatar {  
+        width: 80px;  
+        height: 80px;  
+        border-radius: 50%;  
+        margin-bottom: 10px;  
+    }  
+
+    .stats {  
+        font-size: 14px;  
+        margin: 10px 0;  
+    }  
+      
+    .music-control {  
+    background: none;  
+    border: none;  
+    width: 90vw;  
+    height: 50px;  
+    cursor: pointer;  
+    display: block;  
+    margin: 0 auto; /* 水平居中 */  
+}  
+
+.music-control:hover {  
+    transform: scale(1);  
+}  
+.music-control img {  
+    width: 100%;  /* 让图片宽度填充整个 .music-control */  
+    height: auto; /* 保持图片比例 */  
+    display: block; /* 避免默认的行内空隙 */  
+    }  
+
+.stats {  
+    position: relative; /* 确保音乐按钮能放在该位置 */  
+}  
+
+    .grid {  
+        display: grid;  
+        grid-template-columns: repeat(3, 1fr);  
+        gap: 2px;  
+    }  
+    .grid img {  
+width: 100%;  
+height: 100%;  
+object-fit: cover; /* 裁剪填充，不变形 */  
+  display: block;  /* 去掉默认的 img 间隙 */
+
+}
+
+.thumbnail {  
+        aspect-ratio: 3/4;  
+        background: #FFFFFF;  
+        position: relative;  
+    }  
+
+    /* 文件夹样式 */  
+    .folder-container {  
+        position: fixed;  
+        top: 0;  
+        left: 0;  
+        width: 100vw;  
+        height: 100vh;  
+        display: none;  
+        background: #000; /* 新增黑色背景 */  
+        z-index: 1000; /* 确保在最上层 */  
+    }  
+
+    .folder {  
+        width: 100%;  
+        height: 100%;  
+        position: relative;  
+    }  
+
+    .carousel {  
+        display: flex;  
+        transition: transform 0.3s;  
+    }  
+
+    .media-item {  
+        flex: 0 0 100%;  
+        height: 100vh;  
+        display: flex;  
+        align-items: center;  
+        justify-content: center;  
+    }  
+
+    video, img {  
+        max-width: 100%;  
+        max-height: 100%;  
+        object-fit: contain;  
+    }  
+
+    .date {  
+        position: absolute;  
+        bottom: 20px;  
+        left: 20px;  
+        color: white;  
+        font-size: 14px;  
+        z-index: 1001;  
+    }  
+
+    .close-btn {  
+position: absolute;  
+top: 30px;  
+right: 40px;  
+width: 60px;    
+height: 60px;  
+background-image: url('https://cdn.jsdelivr.net/gh/csyan03/1@main/241226-t.jpg');   
+background-size: cover;  
+background-repeat: no-repeat;  
+text-indent: -9999px;   
+border: none;  
+cursor: pointer;  
+z-index: 1001;  
+border-radius: 50%; /* 添加这一行，使按钮呈圆形 */
+
+}
+
+</style>
+
+</head>  
+<body>  
+    <!-- 主页内容 -->  
+    <div class="profile">  
+        <img src="https://cdn.jsdelivr.net/gh/csyan03/1@main/241226-t.jpg" class="avatar" alt="头像">  
+        <h1>小明同学</h1>  
+        <div class="stats">  
+            <span>出生</span>  
+            <span>皇帝</span>  
+            <br>  
+            <button class="music-control" id="musicBtn">  
+            <img src="https://cdn.jsdelivr.net/gh/csyan03/1@main/gz.png" alt="Play Music" id="playIcon" width="50" height="50">  
+        </button>  
+        </div>  
+        <audio id="bgMusic" loop>  
+        <source src="https://cdn.jsdelivr.net/gh/csyan03/1@main/xht.mp3" type="audio/mpeg">  
+        您的浏览器不支持音频播放。  
+    </audio>  <div class="grid">  
+        <div class="thumbnail" data-folder="1">  
+            <img src="https://cdn.jsdelivr.net/gh/csyan03/1@main/250115-0.webp" class="thumb" alt="缩略图">  
+        </div>  
+        <div class="thumbnail" data-folder="2">  
+            <img src="https://cdn.jsdelivr.net/gh/csyan03/1@main/250101-0.webp" class="thumb" alt="缩略图">  
+        </div>  
+        <div class="thumbnail" data-folder="3">  
+            <img src="https://cdn.jsdelivr.net/gh/csyan03/1@main/241215-0.webp" class="thumb" alt="缩略图">  
+        </div>  
+        <div class="thumbnail" data-folder="4">  
+            <img src="https://cdn.jsdelivr.net/gh/csyan03/1@main/241128-0.webp" class="thumb" alt="缩略图">  
+        </div>  
+        <div class="thumbnail" data-folder="5">  
+            <img src="https://cdn.jsdelivr.net/gh/csyan03/1@main/241123-0.webp" class="thumb" alt="缩略图">  
+        </div>  
+        <div class="thumbnail" data-folder="6">  
+            <img src="https://cdn.jsdelivr.net/gh/csyan03/1@main/241116-0.webp" class="thumb" alt="缩略图">  
+        </div>  
+        <div class="thumbnail" data-folder="7">  
+            <img src="https://cdn.jsdelivr.net/gh/csyan03/1@main/241102-0.webp" class="thumb" alt="缩略图">  
+        </div>  
+        <div class="thumbnail" data-folder="8">  
+            <img src="https://cdn.jsdelivr.net/gh/csyan03/1@main/241010-1-0.webp" class="thumb" alt="缩略图">  
+        </div>  
+        <div class="thumbnail" data-folder="9">  
+            <img src="https://cdn.jsdelivr.net/gh/csyan03/1@main/241005-0.webp" class="thumb" alt="缩略图">  
+        </div>  
+        <div class="thumbnail" data-folder="10">  
+            <img src="https://cdn.jsdelivr.net/gh/csyan03/1@main/241001-0.webp" class="thumb" alt="缩略图">  
+        </div>  
+        <div class="thumbnail" data-folder="11">  
+            <img src="https://cdn.jsdelivr.net/gh/csyan03/1@main/240930-0.webp" class="thumb" alt="缩略图">  
+        </div>  
+        <div class="thumbnail" data-folder="12">  
+            <img src="https://cdn.jsdelivr.net/gh/csyan03/1@main/240923-1-0.webp" class="thumb" alt="缩略图">  
+        </div>  
+        <div class="thumbnail" data-folder="13">  
+            <img src="https://cdn.jsdelivr.net/gh/csyan03/1@main/240915-0.webp" class="thumb" alt="缩略图">  
+        </div>  
+        <div class="thumbnail" data-folder="14">  
+            <img src="https://cdn.jsdelivr.net/gh/csyan03/1@main/240910-0.webp" class="thumb" alt="缩略图">  
+        </div>  
+        <div class="thumbnail" data-folder="15">  
+            <img src="https://cdn.jsdelivr.net/gh/csyan03/1@main/240904-0.webp" class="thumb" alt="缩略图">  
+        </div>  
+        <div class="thumbnail" data-folder="16">  
+            <img src="https://cdn.jsdelivr.net/gh/csyan03/1@main/240826-0.webp" class="thumb" alt="缩略图">  
+        </div>  
+        <div class="thumbnail" data-folder="17">  
+            <img src="https://cdn.jsdelivr.net/gh/csyan03/1@main/240624-0.webp" class="thumb" alt="缩略图">  
+        </div>  
+        <div class="thumbnail" data-folder="18">  
+            <img src="https://cdn.jsdelivr.net/gh/csyan03/1@main/240529-0.webp" class="thumb" alt="缩略图">  
+        </div>  
+    </div>  
+</div>  
+
+<!-- 文件夹模板 -->  
+<template id="folderTemplate">  
+    <div class="folder-container">  
+        <div class="folder">  
+            <div class="carousel"></div>  
+            <div class="date"></div>  
+            <audio class="bgm"></audio>  
+            <div class="close-btn">close</div>  
+        </div>  
+    </div>  
+</template>
+
+<script>  
+const foldersData = {  
+    1: {  
+        bgm: "250115.mp3",  
+        media: ["250115-1.mp4", "250115-2.mp4"]  
+    },  
+    2: {  
+        bgm: "250101.mp3",  
+        media: ["250101-1.mp4", "250101-2.mp4", "250101-3.mp4", "250101-4.mp4"]  
+    },  
+    3: {  
+        bgm: "241215.mp3",  
+        media: ["241215-1.mp4", "241215-2.mp4", "241215-3.mp4", "241215-4.webp"]  
+    },  
+    4: {  
+        bgm: "241128.mp3",  
+        media: ["241128-1.png"]  
+    },  
+    5: {  
+        bgm: "241123.mp3",  
+        media: ["241123-1.mp4", "241123-2.mp4", "241123-3.png"]  
+    },  
+    6: {  
+        bgm: "241116.mp3",  
+        media: ["241116-1.mp4"]  
+    },  
+    7: {  
+        bgm: "241102.mp3",  
+        media: ["241102-1.jpeg", "241102-2.jpeg", "241102-3.jpeg"]  
+    },  
+    8: {  
+        bgm: "241010.mp3",  
+        media: ["241010-1-0.webp", "241010-2.webp"]  
+    },  
+    9: {  
+        bgm: "241005.mp3",  
+        media: ["241005-1.mp4"]  
+    },  
+    10: {  
+        bgm: "241001.mp3",  
+        media: ["241001-1.webp","241001-2.webp","241001-3.webp","241001-4.webp","241001-5.webp"]  
+    },  
+    11: {  
+        bgm: "240930.mp3",  
+        media: ["240930-1.mp4"]  
+    },  
+    12: {  
+        bgm: "240923.mp3",  
+        media: ["240923-1-0.webp"]  
+    },  
+    13: {  
+        bgm: "240915.mp3",  
+        media: ["240915-1.webp", "240915-2.webp"]  
+    },  
+    14: {  
+        bgm: "240910.mp3",  
+        media: ["240910-1.jpg", "240910-2.jpg"]  
+    },  
+    15: {  
+        bgm: "240904.mp3",  
+        media: ["240904-1.mp4"]  
+    },  
+    16: {  
+        bgm: "240826.mp3",  
+        media: ["240826-1.jpg"]  
+    },  
+    17: {  
+        bgm: "240624.mp3",  
+        media: ["240624-1.mp4"]  
+    },  
+    18: {  
+        bgm: "240529.mp3",  
+        media: ["240529-1.mp4"]  
+    }  
+      
+};  
+  
+let currentFolder = null;  
+let startX, startY;  
+let currentIndex = 0;  
+  
+// 初始化缩略图  
+document.querySelectorAll('.thumbnail').forEach((thumb, index) => {  
+    const folderData = foldersData[index+1];  
+    if(folderData) {  
+        const firstMedia = folderData.media[0];  
+        thumb.style.backgroundImage = `url('${getThumbnail(firstMedia)}')`;  
+        thumb.style.backgroundSize = 'cover';  
+    }  
+});  
+  
+// 点击缩略图打开文件夹  
+document.querySelectorAll('.thumbnail').forEach(thumb => {  
+    thumb.addEventListener('click', () => {  
+        const folderId = thumb.dataset.folder;  
+        openFolder(folderId);  
+    });  
+});  
+  
+     // 新增背景音乐控制逻辑  
+        const musicBtn = document.getElementById('musicBtn');  
+        const bgMusic = document.getElementById('bgMusic');  
+        const playIcon = document.getElementById('playIcon');  
+  
+        // 初始化音乐状态  
+        let isMusicPlaying = false;  
+  
+        // 点击按钮控制音乐播放/暂停  
+        musicBtn.addEventListener('click', () => {  
+            if (isMusicPlaying) {  
+                bgMusic.pause();  
+                playIcon.src = 'https://cdn.jsdelivr.net/gh/csyan03/1@main/gz.png';  // 切换为播放图标  
+            } else {  
+                bgMusic.play();  
+                playIcon.src = 'https://cdn.jsdelivr.net/gh/csyan03/1@main/ygz.png';  // 切换为暂停图标  
+            }  
+            isMusicPlaying = !isMusicPlaying;  
+        });  
+  
+        // 自动播放音乐（需用户交互后触发）  
+        document.addEventListener('pointerdown', () => {  
+    if (!isMusicPlaying) {  
+        bgMusic.play().then(() => {  
+            playIcon.src = 'https://cdn.jsdelivr.net/gh/csyan03/1@main/ygz.png';  
+            isMusicPlaying = true;  
+        }).catch(err => {  
+            console.warn('音乐播放失败:', err);  
+        });  
+    }  
+}, { once: true });  
+  
+function openFolder(folderId) {  
+    const data = foldersData[folderId];  
+    const template = document.getElementById('folderTemplate');  
+    const clone = template.content.cloneNode(true);  
+    const container = clone.querySelector('.folder-container');  
+      
+    // 设置背景音乐
+const bgm = container.querySelector('.bgm');
+bgm.src = `https://cdn.jsdelivr.net/gh/csyan03/1@main/${data.bgm}`;
+bgm.loop = true; 
+  
+    // 设置日期  
+    const dateStr = data.bgm.replace(/(\d{4})(\d{2})(\d{2}).*/, '$1年$2月$3日');  
+    container.querySelector('.date').textContent = dateStr;  
+  
+    // 添加媒体内容  
+    const carousel = container.querySelector('.carousel');  
+    data.media.forEach(file => {  
+        const item = document.createElement('div');  
+        item.className = 'media-item';  
+        if(file.endsWith('.mp4')) {  
+            const video = document.createElement('video');  
+            video.loop = true;  
+            video.innerHTML = `<source src="https://cdn.jsdelivr.net/gh/csyan03/1@main/${file}" type="video/mp4">`;  
+            video.addEventListener('loadeddata', () => {  
+                video.volume = 1;  
+                if(currentIndex === 0) video.play();  
+            });  
+            item.appendChild(video);  
+        } else {  
+            const img = document.createElement('img');  
+            img.src = file;  
+            item.appendChild(img);  
+        }  
+        carousel.appendChild(item);  
+    });  
+  
+    // 添加到页面并显示  
+    document.body.appendChild(clone);  
+    container.style.display = 'block';  
+    currentFolder = container;  
+    bgm.play();  
+  
+    // 初始化滑动事件  
+    initSwipe(container);  
+}  
+  
+function initSwipe(container) {  
+    let startX = 0;  
+    let isSwiping = false;  
+  
+    container.addEventListener('touchstart', e => {  
+        startX = e.touches[0].clientX;  
+        isSwiping = true;  
+    });  
+  
+    container.addEventListener('touchmove', e => {  
+        if(!isSwiping) return;  
+        const deltaX = e.touches[0].clientX - startX;  
+        container.querySelector('.carousel').style.transform = `translateX(${-currentIndex * 100 + deltaX/window.innerWidth*100}%)`;  
+    });  
+  
+    container.addEventListener('touchend', e => {  
+        if(!isSwiping) return;  
+        isSwiping = false;  
+          
+        const deltaX = e.changedTouches[0].clientX - startX;  
+        if(Math.abs(deltaX) > 50) {  
+            if(deltaX > 0 && currentIndex > 0) {  
+                currentIndex--;  
+            } else if(deltaX < 0 && currentIndex < container.querySelectorAll('.media-item').length - 1) {  
+                currentIndex++;  
+            }  
+        }  
+        container.querySelector('.carousel').style.transform = `translateX(${-currentIndex * 100}%)`;  
+        playCurrentMedia();  
+    });  
+  
+    // 关闭按钮  
+    container.querySelector('.close-btn').addEventListener('click', () => {  
+        closeFolder();  
+    });  
+}  
+  
+function playCurrentMedia() {  
+    const currentItem = currentFolder.querySelectorAll('.media-item')[currentIndex];  
+    const video = currentItem.querySelector('video');  
+    if(video) {  
+        video.currentTime = 0;  
+        video.play();  
+    }  
+}  
+  
+function closeFolder() {  
+    currentFolder.remove();  
+    currentFolder = null;  
+    currentIndex = 0;  
+}  
+  
+function getThumbnail(file) {  
+    if(file.endsWith('.mp4')) {  
+        return file.replace('.mp4', '-0.webp');  
+    }  
+    return file;  
+}  
+</script>
+  </body>  
+</html>  
