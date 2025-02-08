@@ -392,7 +392,7 @@ bgm.loop = true;
             item.appendChild(video);  
         } else {  
             const img = document.createElement('img');  
-            img.src = file;  
+            img.src = `https://cdn.jsdelivr.net/gh/csyan03/1@main/${file}`;  
             item.appendChild(img);  
         }  
         carousel.appendChild(item);  
@@ -464,7 +464,7 @@ function getThumbnail(file) {
     if(file.endsWith('.mp4')) {  
         return file.replace('.mp4', '-0.webp');  
     }  
-    return file;  
+    return `https://cdn.jsdelivr.net/gh/csyan03/1@main/${file}`;
 }  
 </script>
   </body>  
