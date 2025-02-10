@@ -342,8 +342,7 @@
             bgm.src = data.bgm;
             bgm.loop = true;
 
-            const dateStr = data.bgm.replace(/(\d{4})(\d{2})(\d{2}).*/, '$1年$2月$3日');
-            container.querySelector('.date').textContent = dateStr;
+            
 
             const carousel = container.querySelector('.carousel');
             data.media.forEach(file => {
